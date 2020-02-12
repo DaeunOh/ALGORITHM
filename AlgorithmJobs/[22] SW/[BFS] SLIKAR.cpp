@@ -25,6 +25,18 @@
 
 */
 
+/*
+
+visitedW의 초기값을 0으로 해놓고,
+조건문에
+visitedW[nextY][nextX] > visited[front.first][front.second] + 1
+라고 썼기 때문에 물이 퍼지지 않아도 고슴도치는 물이 퍼졌다고 생각할 수 있다.
+
+따라서 조건문에 visitedW[nextY][nextX] == 0 을 새로 추가하거나, 
+visitedW의 초기값을 매우 큰 값으로 설정하면 된다.
+
+*/
+
 #include <cstdio>
 #include <queue>
 
