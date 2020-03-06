@@ -1,3 +1,5 @@
+// 50분
+
 /*
 
 시간제한 1초
@@ -116,26 +118,35 @@ const int MAXN = 10 + 10;
 int T;
 int N, M;
 int Q[MAXN];
-
-int comb[MAXN] = {0, };
-int myMin;
-
-int students[MAXN];
 vector <int> myGraph[MAXN];
 
-queue <int> q;
-int visited[MAXN] = {0, };
+int comb[MAXN] = {0, };
+int students[MAXN];
+int myMin;
+
+bool visited[MAXN] = {0, };
 
 int getAbs(int x) {
-  if(x >= 0) return x;
+  if(x > 0) return x;
   else return -x;
 }
 
-int BFS(int x, int flag) {
-  int cnt = 0;
+void getDiff() {
+  int sumX = 0, sumY = 0;
+  for(int i=0; i<N; i++) {
+    if(students[i] == 1) sumX += Q[i];
+    else sumY += Q[i];
+  }
   
+  int diff = getAbs(sumX - sumY);
+  if(myMin > diff) myMin = diff;
+}
+
+int BFS(int x, int flag) {
+  queue <int> q;
+  int cnt = 0;
+  visited[x] = true;
   q.push(x);
-  visited[x] = 1;
   
   while(!q.empty()) {
     int front = q.front();
@@ -146,7 +157,7 @@ int BFS(int x, int flag) {
       int next = myGraph[front][i];
       
       if(!visited[next] && students[next] == flag) {
-        visited[next] = 1;
+        visited[next] = true;
         q.push(next);
       }
     }
@@ -155,36 +166,22 @@ int BFS(int x, int flag) {
   return cnt;
 }
 
-void getDiff() {
-  int X = 0, Y = 0;
-  
-  for(int j=0; j<N; j++) {
-    if(students[j] == 1) X += Q[j];
-    else Y += Q[j];
-  }
-  
-  int diff = getAbs(X-Y);
-  if(myMin > diff) myMin = diff;
-}
-
 bool isEfficient(int K) {
   memset(visited, 0, sizeof(visited));
 
-  for(int j=0; j<N; j++) {
-    if(students[j] == 1) {
-      int cnt = BFS(j, 1);
+  for(int i=0; i<N; i++) {
+    if(students[i] == 1) {
+      int cnt = BFS(i, 1);
       
       if(cnt < K) return false;
       
       break;
     }
   }
-  
-  memset(visited, 0, sizeof(visited));
 
-  for(int j=0; j<N; j++) {
-    if(students[j] == 0) {
-      int cnt = BFS(j, 0);
+  for(int i=0; i<N; i++) {
+    if(students[i] == 0) {
+      int cnt = BFS(i, 0);
       
       if(cnt < N-K) return false;
       
@@ -220,6 +217,7 @@ int main() {
     for(int i=0; i<N; i++) myGraph[i].clear();
     myMin = 987987987;
     
+    // A: 0, B: 1, ...
     for(int i=0; i<N; i++) {
       int adjNum;
       scanf("%d %d", &Q[i], &adjNum);
